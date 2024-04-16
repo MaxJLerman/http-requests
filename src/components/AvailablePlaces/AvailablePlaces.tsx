@@ -9,16 +9,21 @@ interface Props {
 }
 
 export const AvailablePlaces: React.FC<Props> = ({ onSelectPlace }) => {
+  const [isFetching, setIsFetching] = useState<boolean>(false);
   const [availablePlaces, setAvailablePlaces] = useState<Place[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/places")
-      .then((response) => {
-        return response.json();
-      })
-      .then((responseData: ResponseData) => {
-        setAvailablePlaces(responseData.places);
-      });
+    const fetchPlaces = async (): Promise<void> => {
+      setIsFetching(true);
+
+      const response = await fetch("http://localhost:3000/places");
+      const responseData: ResponseData = await response.json();
+      setAvailablePlaces(responseData.places);
+
+      setIsFetching(false);
+    };
+
+    fetchPlaces();
   }, []);
 
   return (
@@ -27,6 +32,8 @@ export const AvailablePlaces: React.FC<Props> = ({ onSelectPlace }) => {
       places={availablePlaces}
       fallbackText={"No places available."}
       onSelectPlace={onSelectPlace}
+      isLoading={isFetching}
+      loadingText={"Fetching place data..."}
     />
   );
 };
