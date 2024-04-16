@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { Place } from "../../types/Place.type";
 import { Places } from "../Places/Places";
-import { ResponseData } from "../../types/ResponseData.type";
 import { ErrorComponent } from "../Error/Error";
 import { sortPlacesByDistance } from "../../lib/loc";
+import { fetchAvailablePlaces } from "../../api/api";
 
 interface Props {
   onSelectPlace: (place: Place) => void;
@@ -20,16 +20,11 @@ export const AvailablePlaces: React.FC<Props> = ({ onSelectPlace }) => {
       setIsFetching(true);
 
       try {
-        const response = await fetch("http://localhost:3000/places");
-        const responseData: ResponseData = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch places");
-        }
+        const places = await fetchAvailablePlaces();
 
         navigator.geolocation.getCurrentPosition((position) => {
           const sortedPlaces = sortPlacesByDistance(
-            responseData.places,
+            places,
             position.coords.latitude,
             position.coords.longitude,
           );
