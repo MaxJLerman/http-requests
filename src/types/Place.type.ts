@@ -5,4 +5,6 @@ export type Place = {
     alt: string;
   };
   title: string;
+  lat: number;
+  lon: number;
 };

@@ -3,7 +3,7 @@ import { useRef, useState, useCallback } from "react";
 import { Places } from "./components/Places/Places";
 import { Modal } from "./components/Modal/Modal";
 import { DeleteConfirmation } from "./components/DeleteConfirmation/DeleteConfirmation";
-// import logoImg from "./assets/logo.png";
+import logoImg from "./assets/logo.png";
 import { AvailablePlaces } from "./components/AvailablePlaces/AvailablePlaces";
 import { Place } from "./types/Place.type";
 
@@ -14,6 +14,8 @@ const initialPlace: Place = {
     alt: "",
   },
   title: "",
+  lat: 0,
+  lon: 0,
 };
 
 function App() {
@@ -60,7 +62,7 @@ function App() {
       </Modal>
 
       <header>
-        <img src={"./assets/logo.jpg"} alt="Stylized globe" />
+        <img src={logoImg} alt="Stylized globe" />
         <h1>PlacePicker</h1>
         <p>
           Create your personal collection of places you would like to visit or
