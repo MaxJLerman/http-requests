@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export default function ProgressBar({ timer }) {
+interface Props {
+  timer: number;
+}
+
+export const ProgressBar: React.FC<Props> = ({ timer }) => {
   const [remainingTime, setRemainingTime] = useState(timer);
 
   useEffect(() => {
@@ -14,4 +18,4 @@ export default function ProgressBar({ timer }) {
   }, []);
 
   return <progress value={remainingTime} max={timer} />;
-}
+};

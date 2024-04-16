@@ -1,28 +1,36 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from "react";
 
-import Places from './components/Places.jsx';
-import Modal from './components/Modal.jsx';
-import DeleteConfirmation from './components/DeleteConfirmation.jsx';
-import logoImg from './assets/logo.png';
-import AvailablePlaces from './components/AvailablePlaces.jsx';
+import { Places } from "./components/Places/Places";
+import { Modal } from "./components/Modal/Modal";
+import { DeleteConfirmation } from "./components/DeleteConfirmation/DeleteConfirmation";
+// import logoImg from "./assets/logo.png";
+import { AvailablePlaces } from "./components/AvailablePlaces/AvailablePlaces";
+import { Place } from "./types/Place.type";
+
+const initialPlace: Place = {
+  id: "",
+  image: {
+    src: "",
+    alt: "",
+  },
+  title: "",
+};
 
 function App() {
-  const selectedPlace = useRef();
+  const selectedPlace = useRef<Place>(initialPlace);
+  const [userPlaces, setUserPlaces] = useState<Place[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
-  const [userPlaces, setUserPlaces] = useState([]);
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  function handleStartRemovePlace(place) {
+  const handleStartRemovePlace = (place: Place): void => {
     setModalIsOpen(true);
     selectedPlace.current = place;
-  }
+  };
 
-  function handleStopRemovePlace() {
+  const handleStopRemovePlace = (): void => {
     setModalIsOpen(false);
-  }
+  };
 
-  function handleSelectPlace(selectedPlace) {
+  const handleSelectPlace = (selectedPlace: Place): void => {
     setUserPlaces((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
         prevPickedPlaces = [];
@@ -32,11 +40,11 @@ function App() {
       }
       return [selectedPlace, ...prevPickedPlaces];
     });
-  }
+  };
 
-  const handleRemovePlace = useCallback(async function handleRemovePlace() {
+  const handleRemovePlace = useCallback(async (): Promise<void> => {
     setUserPlaces((prevPickedPlaces) =>
-      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
+      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id),
     );
 
     setModalIsOpen(false);
@@ -52,7 +60,7 @@ function App() {
       </Modal>
 
       <header>
-        <img src={logoImg} alt="Stylized globe" />
+        <img src={"./assets/logo.jpg"} alt="Stylized globe" />
         <h1>PlacePicker</h1>
         <p>
           Create your personal collection of places you would like to visit or
