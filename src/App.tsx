@@ -6,6 +6,7 @@ import { DeleteConfirmation } from "./components/DeleteConfirmation/DeleteConfir
 import logoImg from "./assets/logo.png";
 import { AvailablePlaces } from "./components/AvailablePlaces/AvailablePlaces";
 import { Place } from "./types/Place.type";
+import { updateUserPlaces } from "./api/api";
 
 const initialPlace: Place = {
   id: "",
@@ -21,6 +22,7 @@ const initialPlace: Place = {
 function App() {
   const selectedPlace = useRef<Place>(initialPlace);
   const [userPlaces, setUserPlaces] = useState<Place[]>([]);
+  const [errorUpdatingPlaces, setErrorUpdatingPlaces] = useState();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const handleStartRemovePlace = (place: Place): void => {
@@ -32,7 +34,7 @@ function App() {
     setModalIsOpen(false);
   };
 
-  const handleSelectPlace = (selectedPlace: Place): void => {
+  const handleSelectPlace = async (selectedPlace: Place): Promise<void> => {
     setUserPlaces((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
         prevPickedPlaces = [];
@@ -42,6 +44,15 @@ function App() {
       }
       return [selectedPlace, ...prevPickedPlaces];
     });
+
+    try {
+      await updateUserPlaces([selectedPlace, ...userPlaces]);
+    } catch (error) {
+      setUserPlaces(userPlaces);
+      setErrorUpdatingPlaces({
+        message: error.message || "Failed to update places",
+      });
+    }
   };
 
   const handleRemovePlace = useCallback(async (): Promise<void> => {
@@ -60,7 +71,6 @@ function App() {
           onConfirm={handleRemovePlace}
         />
       </Modal>
-
       <header>
         <img src={logoImg} alt="Stylized globe" />
         <h1>PlacePicker</h1>
